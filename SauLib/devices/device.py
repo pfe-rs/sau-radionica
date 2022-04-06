@@ -1,5 +1,5 @@
 from enum import IntEnum
-from filipid.port import Port
+from SauLib.golub.filipid.port import Port
 from typing import Union
 
 class UMAKConstants:
@@ -78,7 +78,7 @@ class Device:
 
     def sensor(self) -> float:
         data_rsp = self.port.send(
-            [UMAKConstants.SENSOR, self.channel],
+            [UMAKConstants.CMD_SENSOR, self.channel],
             self.sleep
         )
         sensor_data: int = 0
