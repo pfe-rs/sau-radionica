@@ -1,10 +1,10 @@
 import serial
 import logging
-import time
 import serial.tools.list_ports
+from time import sleep
 
 class Port:
-    def __init__(self, port: str, baudrate: int = 19200, timeout: int = 1, verbosity: bool = False):
+    def __init__(self, port: str, baudrate: int = 19200, timeout: int = 1, verbosity: bool = False, init_delay: float = 2):
         """
         Initialize serial port
         :param port: string containing port name
@@ -30,13 +30,14 @@ class Port:
             self.logger = logging.getLogger(__name__)
         self.log('Port init started ')
         self.ser = serial.Serial(
-                port=port,
-                baudrate=baudrate,
-                timeout=timeout
+            port=port,
+            baudrate=baudrate,
+            timeout=timeout
         )
+        sleep(init_delay)
         self.log('Port init completed ')
 
-    def send(self, data: list, sleep: float = 0.02) -> list:
+    def send(self, data: list, delay: float = 0.02) -> list:
         """
         Send data package to the designed port
         :param data: list of data points
@@ -45,7 +46,7 @@ class Port:
         """
         self.log('Sending data started ')
         self.ser.write(bytearray(data))
-        time.sleep(sleep)
+        sleep(delay)
         rsp = self.ser.read_all()
         self.log('Sending data completed, received {0} '.format(list(rsp)))
         return list(rsp)

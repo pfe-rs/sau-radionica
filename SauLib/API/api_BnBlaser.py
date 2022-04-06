@@ -1,8 +1,7 @@
 import sys 
 sys.path.append("..\\..")
-from hw.Devices.device import *
-from hw.sau_api.api_base import ApiBase
-
+from SauLib.devices.device import Device
+from api_base import ApiBase
 
 class Laser(Device):
     def __init__(self, port):
@@ -40,9 +39,9 @@ class Beam(Device):
         rsp = self.port.send([254, 1, position+127], 0.04)
 
 
-class BnBLaserControll(Device):
+class BnBLaserControl(Device):
     def __init__(self, port):
-        Device.__init__(self, port=port)
+        Device.__init__(self, port=port, channel=0)
         # Init Sensor
         self.position = Laser(port=self.port)
         # Init Actuator
@@ -60,7 +59,7 @@ class BnBlaser(ApiBase):
     def __init__(self, port: str):
         ApiBase.__init__(self)
         # Dryer init
-        self.BnB = BnBLaserControll(port=port)
+        self.BnB = BnBLaserControl(port=port)
 
     def write_actuator(self, command):
         self.BnB.send_data(command)

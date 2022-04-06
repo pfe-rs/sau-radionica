@@ -1,8 +1,7 @@
-from hw.Devices import device
-from hw.sau_api.api_base import ApiBase
+from SauLib.devices.device import Device
+from .api_base import ApiBase
 
-
-class TempSensor(device.Device):
+class TempSensor(Device):
 
     def __init__(self, port, sleep: float = 0.04):
         self.port = port
@@ -11,16 +10,14 @@ class TempSensor(device.Device):
         BIND = 253  # Binding signal
         IN = 252  # Input signal
         CHAN_ID = 2  # Channel ID
-        INPUT_PARAM = 3  # Input Parameter
+        INPUT_PARAM = 11  # Input Parameter
         INPUT_SRC = 0  # Input source 0 - ADC
         sensor_init = self.port.send(
             [BIND, IN, CHAN_ID, INPUT_PARAM, INPUT_SRC],
             self.sleep
         )
         if sensor_init[0] != 65:
-            raise Exception(
-                'Failed temperature sensor binding!'
-            )
+            raise Exception('Failed temperature sensor binding!')
 
     def get_data(self):
         SENSOR = 255
@@ -38,7 +35,7 @@ class TempSensor(device.Device):
         return temperature
 
 
-class Heater(device.Device):
+class Heater(Device):
 
     def __init__(self, port, sleep: float = 0.04):
         self.port = port
@@ -73,11 +70,10 @@ class Heater(device.Device):
             )
 
 
-class DryerControll(device.Device):
+class DryerControl(Device):
 
     def __init__(self, port, sleep: float = 0.04, verbosity: bool = False):
-        self.sleep = sleep
-        device.Device.__init__(self, port=port, verbosity=verbosity)
+        Device.__init__(self, channel=2, port=port, verbosity=verbosity, sleep=sleep)
         # Init Sensor
         self.temp_sensor = TempSensor(port=self.port, sleep=self.sleep)
         # Init Actuator
@@ -93,10 +89,10 @@ class DryerControll(device.Device):
 
 class Dryer(ApiBase):
 
-    def __init__(self, port: str, verbosity: bool = False):
+    def __init__(self, port: str, verbosity: bool = False, sleep: float = 0.04):
         ApiBase.__init__(self)
         # Dryer init
-        self.dryer = DryerControll(port=port, verbosity=verbosity)
+        self.dryer = DryerControl(port=port, sleep=sleep, verbosity=verbosity)
 
     def write_actuator(self, command):
         self.dryer.send_data(command)

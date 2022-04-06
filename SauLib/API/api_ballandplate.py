@@ -2,15 +2,15 @@ import sys
 import multiprocessing as mp
 
 sys.path.append('../..')
-from hw.Devices import device
-from hw.sau_api.api_base import ApiBase
+from SauLib.devices.device import Device
+from api_base import ApiBase
 
 sys.path.append('../ball_and_plate')
 
 import lib
 
 
-class CameraSensor(device.Device):
+class CameraSensor(Device):
 	
 	def __init__(self, cam):
 		lib.init(cam)
@@ -24,7 +24,7 @@ class CameraSensor(device.Device):
 		return x_pos, y_pos
 
 
-class Motor(device.Device):
+class Motor(Device):
 	
 	def __init__(self, port, chan_id, motor_id, sleep=0.04):
 		self.port = port
@@ -51,14 +51,14 @@ class Motor(device.Device):
 			raise Exception('Failed actuator write!')
 
 
-class BallControl(device.Device):
+class BallControl(Device):
 
 	def __init__(self, port, sleep=0.04, verbosity=False):
 		self.sleep = sleep
 		self.position_x = mp.Value('d', 0.0)
 		self.position_y = mp.Value('d', 0.0)
 		self.camera_process = mp.Process(target=self.camera_loop)
-		device.Device.__init__(self, port=port, verbosity=verbosity)
+		Device.__init__(self, channel=5, port=port, verbosity=verbosity)
 		self.motor1 = Motor(
 			port=self.port,
 			chan_id=5,
