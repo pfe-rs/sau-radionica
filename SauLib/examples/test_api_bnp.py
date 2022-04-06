@@ -1,7 +1,9 @@
-# import sys
-from api_ballandplate import BallAndPlate
+import sys
 
-# PORT = '/dev/ttyUSB0'
+sys.path.append('../..')
+from SauLib.API.api_ballandplate import BallAndPlate
+
+# PORT = '/dev/ttyACM0'
 
 # diskusija = BallAndPlate(PORT)
 # while True:
@@ -18,7 +20,7 @@ sys.path.append('../..')
 
 
 # Set port name
-PORT = '/dev/ttyUSB0'
+PORT = '/dev/ttyACM0'
 
 
 class TestBnP(BallAndPlate):

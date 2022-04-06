@@ -7,7 +7,7 @@ sys.path.append('../..')
 from hw.sau_api.api_dryer import Dryer
 
 # Set port name
-PORT = '/dev/ttyUSB0'
+PORT = '/dev/ttyACM0'
 
 
 class TestDryer(Dryer):
