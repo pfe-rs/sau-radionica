@@ -1,22 +1,73 @@
 import sys
 import multiprocessing as mp
 
-sys.path.append('../..')
+sys.path.append('.')
 from SauLib.devices.device import Device
-from api_base import ApiBase
+from .api_base import ApiBase
 
-sys.path.append('../ball_and_plate')
+import cv2
+import numpy as np
 
-import lib
+cap = None
+
+
+def init(cam):
+    global cap
+    cap = cv2.VideoCapture(cam)
+
+
+def get():
+    global cap
+    ret, frame = cap.read()
+
+    b, g, r = cv2.split(frame)
+
+    processed = 1.0 * r + 0.5 * g - 1.5 * b
+    rect, thresh = cv2.threshold(processed, 50, 255, 0)
+
+    M = cv2.moments(thresh)
+
+    cX = 0
+    cY = 0
+
+    if M['m00'] != 0:
+        cX = int(M["m10"] / M["m00"])
+        cY = int(M["m01"] / M["m00"])
+
+        cv2.circle(frame, (cX, cY), 5, (255, 255, 255), -1)
+        cv2.putText(frame, "loptica", (cX - 25, cY - 25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    black = cv2.inRange(hsv, (0, 0, 0), (255, 120, 90))
+
+    indencies = np.where(black == 255)
+
+    ymin = np.amin(indencies[0])
+    ymax = np.amax(indencies[0])
+
+    xmin = np.amin(indencies[1])
+    xmax = np.amax(indencies[1])
+
+    plate_cx = xmin + (xmax - xmin) / 2
+    plate_cy = ymin + (ymax - ymin) / 2
+
+    x_pos = cX - plate_cx
+    y_pos = plate_cy - cY
+
+    print("lib vraca {}".format((x_pos, y_pos)))
+
+    return [x_pos, y_pos]
+
 
 
 class CameraSensor(Device):
 	
 	def __init__(self, cam):
-		lib.init(cam)
+		init(cam)
 
 	def get_data(self):
-		data = lib.get()
+		data = get()
 		
 		x_pos = data[0]
 		y_pos = data[1]
@@ -33,7 +84,7 @@ class Motor(Device):
 		BIND = 253
 		OUT = 251
 		CHAN_ID = chan_id
-		INPUT_SRC = motor_id + 2
+		INPUT_SRC = motor_id
 		motor_init = self.port.send(
 			[BIND, OUT, CHAN_ID, INPUT_SRC],
 			self.sleep
@@ -61,13 +112,13 @@ class BallControl(Device):
 		Device.__init__(self, channel=5, port=port, verbosity=verbosity)
 		self.motor1 = Motor(
 			port=self.port,
-			chan_id=5,
+			chan_id=9,
 			motor_id=1,
 			sleep=self.sleep
 		)
 		self.motor2 = Motor(
 			port=self.port,
-			chan_id=6,
+			chan_id=10,
 			motor_id=2,
 			sleep=self.sleep
 		)

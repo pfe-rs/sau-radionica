@@ -6,7 +6,7 @@ import numpy as np
 
 # Setup variables
 
-port_name = '/dev/ttyUSB0'
+port_name = '/dev/ttyACM0'
 camera_select = 0
 
 # Helper functions and variables
@@ -48,7 +48,7 @@ def set_dyn_speed(spd):
 
 # Main code
 
-def init(arg_port_name='/def/ttyUSB0/', arg_camera_select=0):
+def init(arg_port_name='/def/ttyACM0/', arg_camera_select=0):
     global cap, width, height, x, y, ser, port_name, camera_select
 
     port_name = arg_port_name

@@ -59,8 +59,16 @@ void reportAcknowledge() {
   Serial.write('A');
 }
 
-// Outputs to DAC
-void dacActuator(unsigned int value) {
+// Outputs to PWM
+void pwm6Actuator(unsigned int value) {
+  analogWrite(6, value);
+}
+
+void pwm9Actuator(unsigned int value) {
+  analogWrite(9, value);
+}
+
+void pwm10Actuator(unsigned int value) {
   analogWrite(10, value);
 }
 
@@ -122,12 +130,20 @@ void loop() {
     case STATE_BIND_OUT_DEVICE_CONFIG:
       switch (uartByte) {
         case DEVICE_OUT_DAC:
-          actuators[channelId] = dacActuator;
+          actuators[channelId] = pwm10Actuator;
           actuatorBytes[channelId] = 2;
           reportAcknowledge();
           break;
         case DEVICE_OUT_PWM1:
+          actuators[channelId] = pwm6Actuator;
+          actuatorBytes[channelId] = 1;
+          reportAcknowledge();
+          break;
         case DEVICE_OUT_PWM2:
+          actuators[channelId] = pwm9Actuator;
+          actuatorBytes[channelId] = 1;
+          reportAcknowledge();
+          break;
         default:
           reportError();
           break;

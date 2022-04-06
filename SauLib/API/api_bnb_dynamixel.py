@@ -5,7 +5,7 @@ import bnb_dynamixel as bnb_dynamixel
 
 class ApiBnbDynamixel(ApiBase):
 
-    def __init__(self, camera_port=0, motor_port='/dev/ttyUSB0'):
+    def __init__(self, camera_port=0, motor_port='/dev/ttyACM0'):
         ApiBase.__init__(self)
         self.camera_process = mp.Process(target=self.camera_loop)
         self.pos_mutex = mp.Lock()

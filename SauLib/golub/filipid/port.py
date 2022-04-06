@@ -4,7 +4,7 @@ import serial.tools.list_ports
 from time import sleep
 
 class Port:
-    def __init__(self, port: str, baudrate: int = 19200, timeout: int = 1, verbosity: bool = False, init_delay: float = 2):
+    def __init__(self, port: str, baudrate: int = 19200, timeout: int = 1, verbosity: bool = False, init_delay: float = 5):
         """
         Initialize serial port
         :param port: string containing port name

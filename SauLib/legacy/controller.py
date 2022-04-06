@@ -4,7 +4,7 @@ import time
 
 class MyController(Api):
 
-	def __init__(self, camera_port=0, motor_port='/dev/ttyUSB0'):
+	def __init__(self, camera_port=0, motor_port='/dev/ttyACM0'):
 		Api.__init__(self, camera_port, motor_port)
 		self.state = [0, 0]
 		self.Kp = 1
