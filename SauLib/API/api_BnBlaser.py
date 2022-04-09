@@ -1,7 +1,7 @@
 import sys 
-sys.path.append("..\\..")
+sys.path.append("../..")
 from SauLib.devices.device import Device
-from api_base import ApiBase
+from .api_base import ApiBase
 
 class Laser(Device):
     def __init__(self, port):
