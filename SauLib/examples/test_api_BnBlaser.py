@@ -1,8 +1,10 @@
-from api_BnBlaser import BnBlaser
+import sys
+sys.path.append("../..")
+from SauLib.API.api_BnBlaser import BnBlaser
 from math import sin
 import matplotlib.pyplot as plt
 
-PORT = "COM4"
+PORT = "/dev/ttyACM0"
 
 t_sample = 0.5
 
