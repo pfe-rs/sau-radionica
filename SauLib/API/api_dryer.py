@@ -12,6 +12,19 @@ class TempSensor(Device):
     def get_data(self):
         return self.sensor()
 
+class DigitalTempSensor(Device):
+    def __init__(self, port, sleep: float = 0.04):
+        Device.__init__(self, port, channel=2, sleep=sleep)
+        self.bind_input_device(InputSource.TEMP_SENSOR, 11)
+
+    def get_data(self):
+        t = self.sensor()
+        temp = t & 0x0FFF
+        temp /= 16.0
+        if (t & 0x1000):
+            temp -= 256
+        return temp
+
 class Heater(Device):
 
     def __init__(self, port, sleep: float = 0.04):
@@ -23,9 +36,12 @@ class Heater(Device):
 
 class DryerControl(Device):
 
-    def __init__(self, port, sleep: float = 0.04, verbosity: bool = False):
+    def __init__(self, port, sleep: float = 0.04, verbosity: bool = False, digital: bool = False):
         Device.__init__(self, channel=2, port=port, verbosity=verbosity, sleep=sleep)
-        self.temp_sensor = TempSensor(port=self.port, sleep=self.sleep)
+        if digital:
+            self.temp_sensor = DigitalTempSensor(port=self.port, sleep=self.sleep)
+        else:
+            self.temp_sensor = TempSensor(port=self.port, sleep=self.sleep)
         self.heater = Heater(port=self.port, sleep=self.sleep)
 
     def send_data(self, temperature: int):
@@ -35,12 +51,11 @@ class DryerControl(Device):
         temp = self.temp_sensor.get_data()
         return temp
 
-
 class Dryer(ApiBase):
 
-    def __init__(self, port: str, verbosity: bool = False, sleep: float = 0.04):
+    def __init__(self, port: str, verbosity: bool = False, sleep: float = 0.04, digital: bool = False):
         ApiBase.__init__(self)
-        self.dryer = DryerControl(port=port, sleep=sleep, verbosity=verbosity)
+        self.dryer = DryerControl(port=port, sleep=sleep, verbosity=verbosity, digital=digital)
 
     def write_actuator(self, command):
         self.dryer.send_data(command)

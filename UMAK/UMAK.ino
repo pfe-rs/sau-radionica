@@ -4,7 +4,10 @@
  */
 
 #include <Servo.h> 
+#include "Adafruit_MCP9808.h"
 Servo servo1, servo2; // servo object representing the MG 996R servo
+
+Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
 
 // Types
 typedef void (*actuator)(unsigned int);
@@ -27,7 +30,8 @@ typedef enum {
   DEVICE_OUT_PWM2
 } UMAKOutputDevice;
 typedef enum {
-  DEVICE_IN_ADC
+  DEVICE_IN_ADC,
+  DEVICE_IN_TEMP_SENSOR
 } UMAKInputDevice;
 
 // Channel configuration
@@ -53,6 +57,7 @@ UMAKState state = STATE_INIT;
 char channelId = 0;
 unsigned bytesLeft = 0;
 unsigned actInput = 0;
+boolean DigitalTempSensor;
 
 // Reports when an error occurs
 void reportError() {
@@ -82,7 +87,12 @@ unsigned int adcSensor(char channel) {
   return analogRead(channel);
 }
 
+unsigned int digitalSensor(char chanel){
+  tempsensor.readTempC();
+}
+
 void setup() {
+  DigitalTempSensor = tempsensor.begin();
   Serial.begin(19200);
   servo1.attach(6);
   servo2.attach(9);
@@ -173,6 +183,15 @@ void loop() {
       switch (uartByte) {
         case DEVICE_IN_ADC:
           sensors[channelId] = adcSensor;
+          sensorBytes[channelId] = 2;
+          reportAcknowledge();
+          break;
+        case DEVICE_IN_TEMP_SENSOR:
+          if (!DigitalTempSensor) {
+            reportError();
+            break;
+          }
+          sensors[channelId] = digitalSensor;
           sensorBytes[channelId] = 2;
           reportAcknowledge();
           break;
