@@ -55,6 +55,8 @@ def get():
     x_pos = cX - plate_cx
     y_pos = plate_cy - cY
 
+    cv2.imshow('frame', frame)
+
     print("lib vraca {}".format((x_pos, y_pos)))
 
     return [x_pos, y_pos]
@@ -129,7 +131,9 @@ class BallControl(Device):
 		self.camera_sensor = CameraSensor(cam=0)
 		while True:
 			tmp_x, tmp_y = self.camera_sensor.get_data()
-
+			keypressed = cv2.waitKey(30)
+			if keypressed == ord('q'):
+				break
 			self.position_x.value = tmp_x
 			self.position_y.value = tmp_y
 

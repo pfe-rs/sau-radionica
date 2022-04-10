@@ -5,15 +5,9 @@ from SauLib.API.api_ballandplate import BallAndPlate
 
 # PORT = '/dev/ttyACM0'
 
-# diskusija = BallAndPlate(PORT)
-# while True:
-# 	diskusija.write_actuator(1,150)
-# 	diskusija.write_actuator(1,120)
-# 	diskusija.write_actuator(2,138)
-# 	print(diskusija.read_sensor_data())
 
 import sys
-from math import sin
+from math import sin, cos
 import matplotlib.pyplot as plt
 
 sys.path.append('../..')
@@ -35,30 +29,33 @@ class TestBnP(BallAndPlate):
 
 	def control(self, measurement):
 
-		# dodajte vas kod ovde!
-		# control treba da vraca int u rasponu [0,4000]
 		self.dt += 1
-		control_outx = int(255//2*(1+sin(self.dt * 0.01)))
-		control_outy = int(255//2*(1+sin(self.dt * 0.01)))
-		# end vas kod
+		MIN_SERVO = 30
+		MAX_SERVO = 150
+
+##### POCETAK VASEG KODA
+		# funkcija treba da vrati signal kontrole, a dobija signal senzora kao ulaz
+
+		# sinusi koji talasaju [0,1] kao primer
+		control_x = (1+sin(self.dt * 0.01))/2
+		control_y = (1+cos(self.dt * 0.01))/2
+
+		#control_outx = (96+dt) % 200
+		#control_outy = 96
+
+###### KRAJ VASEG KODA
+
+		control_x_clamped = int(MIN_SERVO + (MAX_SERVO-MIN_SERVO) * control_x)
+		control_y_clamped = int(MIN_SERVO + (MAX_SERVO-MIN_SERVO) * control_y)
 
 		print("Measurement {}".format(measurement))
-		print("Control {} {}".format(control_outx, control_outy))
-
-		# real time plot, Marjanovic TM
-		# print("{} {}".format(measurement, control_out))
-		# for i in range(int(measurement/10)):
-		# 	print(" ", end="")
-		# print("*")
-		# for i in range(int(control_outx/100)):
-		# 	print(" ", end="")
-		# print("O")
+		print("Control {} {}".format(control_x_clamped, control_y_clamped))
 
 		# fill in the real plot
-		# self.measurements.append(measurement)
-		# self.controls.append(control_out)
+		self.measurements.append(measurement)
+		self.controls.append((control_x_clamped, control_y_clamped))
 
-		return control_outx, control_outy
+		return control_x_clamped, control_y_clamped
 
 
 tst = TestBnP(port=PORT)
