@@ -2,6 +2,10 @@
  * UMAK: Univerzalni Modularni Aparaturni Kontroler (za Arduino)
  * Original by Nikola Milenić, ported for Arduino by Luka Simić
  */
+
+#include <Servo.h> 
+Servo servo1, servo2; // servo object representing the MG 996R servo
+
 // Types
 typedef void (*actuator)(unsigned int);
 typedef unsigned int (*sensor)(char);
@@ -59,13 +63,14 @@ void reportAcknowledge() {
   Serial.write('A');
 }
 
-// Outputs to PWM
 void pwm6Actuator(unsigned int value) {
-  analogWrite(6, value);
+  // used for controlling servo motors
+  servo1.write(value);
 }
 
 void pwm9Actuator(unsigned int value) {
-  analogWrite(9, value);
+  // Used for controlling servo motors
+  servo2.write(value);
 }
 
 void pwm10Actuator(unsigned int value) {
@@ -79,6 +84,8 @@ unsigned int adcSensor(char channel) {
 
 void setup() {
   Serial.begin(19200);
+  servo1.attach(6);
+  servo2.attach(9);
   delay(100);
 }
 
