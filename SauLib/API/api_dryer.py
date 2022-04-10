@@ -7,7 +7,7 @@ class TempSensor(Device):
 
     def __init__(self, port, sleep: float = 0.04):
         Device.__init__(self, port, channel=2, sleep=sleep)
-        self.bind_input_device(InputSource.ADC, 11)
+        self.bind_input_device(InputSource.ADC, 100)
 
     def get_data(self):
         return self.sensor()

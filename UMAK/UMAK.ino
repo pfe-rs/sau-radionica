@@ -54,6 +54,21 @@ char channelId = 0;
 unsigned bytesLeft = 0;
 unsigned actInput = 0;
 
+// Allows users to specify ports over 100 to target analog ports.
+int mapPort(char channel) {
+  if (channel >= 100) {
+    switch (channel) {
+      case 100: return A0;
+      case 101: return A1;
+      case 102: return A2;
+      case 103: return A3;
+      case 104: return A4;
+      case 105: return A5;
+    }
+  }
+  return channel;
+}
+
 // Reports when an error occurs
 void reportError() {
   Serial.write('E');
@@ -79,7 +94,7 @@ void pwm10Actuator(unsigned int value) {
 
 // Reads from ADC
 unsigned int adcSensor(char channel) {
-  return analogRead(channel);
+  return analogRead(mapPort(channel));
 }
 
 void setup() {
