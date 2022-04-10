@@ -14,6 +14,7 @@ class UMAKConstants:
 
 class InputSource(IntEnum):
     ADC = 0
+    TEMP_SENSOR = 1
 
 class OutputSource(IntEnum):
     DAC = 0
