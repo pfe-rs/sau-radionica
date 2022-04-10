@@ -4,7 +4,6 @@
  */
 
 #include <Servo.h> 
-Servo servo1, servo2; // servo object representing the MG 996R servo
 
 // Types
 typedef void (*actuator)(unsigned int);
@@ -37,6 +36,9 @@ char sensorParams[16] = {0};
 char sensorBytes[16] = {0};
 char actuatorBytes[16] = {0};
 
+// Servo object representing the MG 996R servo
+Servo servo1, servo2;
+
 /**
  * Constants
  */
@@ -54,7 +56,7 @@ char channelId = 0;
 unsigned bytesLeft = 0;
 unsigned actInput = 0;
 
-// Allows users to specify ports over 100 to target analog ports.
+// Allows users to specify ports over 100 to target analog ports
 int mapPort(char channel) {
   if (channel >= 100) {
     switch (channel) {
@@ -78,18 +80,18 @@ void reportAcknowledge() {
   Serial.write('A');
 }
 
-void pwm6Actuator(unsigned int value) {
-  // used for controlling servo motors
+// Used for controlling servo motors
+void servo1Actuator(unsigned int value) {
   servo1.write(value);
 }
 
-void pwm9Actuator(unsigned int value) {
-  // Used for controlling servo motors
+void servo2Actuator(unsigned int value) {
   servo2.write(value);
 }
 
-void pwm10Actuator(unsigned int value) {
-  analogWrite(10, value);
+// Used for controlling the heater
+void heaterActuator(unsigned int value) {
+  analogWrite(11, value);
 }
 
 // Reads from ADC
@@ -99,8 +101,8 @@ unsigned int adcSensor(char channel) {
 
 void setup() {
   Serial.begin(19200);
-  servo1.attach(6);
-  servo2.attach(9);
+  servo1.attach(9);
+  servo2.attach(10);
   delay(100);
 }
 
