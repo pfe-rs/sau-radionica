@@ -165,17 +165,17 @@ void loop() {
     case STATE_BIND_OUT_DEVICE_CONFIG:
       switch (uartByte) {
         case DEVICE_OUT_DAC:
-          actuators[channelId] = pwm10Actuator;
+          actuators[channelId] = heaterActuator;
           actuatorBytes[channelId] = 2;
           reportAcknowledge();
           break;
         case DEVICE_OUT_PWM1:
-          actuators[channelId] = pwm6Actuator;
+          actuators[channelId] = servo1Actuator;
           actuatorBytes[channelId] = 1;
           reportAcknowledge();
           break;
         case DEVICE_OUT_PWM2:
-          actuators[channelId] = pwm9Actuator;
+          actuators[channelId] = servo2Actuator;
           actuatorBytes[channelId] = 1;
           reportAcknowledge();
           break;
