@@ -3,19 +3,11 @@ import sys
 sys.path.append('../..')
 from SauLib.API.api_ballandplate import BallAndPlate
 
-# PORT = '/dev/ttyACM0'
-
-
-import sys
 from math import sin, cos
 import matplotlib.pyplot as plt
 
-sys.path.append('../..')
-
-
 # Set port name
 PORT = '/dev/ttyACM0'
-
 
 class TestBnP(BallAndPlate):
 
@@ -39,9 +31,6 @@ class TestBnP(BallAndPlate):
 		# sinusi koji talasaju [0,1] kao primer
 		control_x = (1+sin(self.dt * 0.01))/2
 		control_y = (1+cos(self.dt * 0.01))/2
-
-		#control_outx = (96+dt) % 200
-		#control_outy = 96
 
 ###### KRAJ VASEG KODA
 
