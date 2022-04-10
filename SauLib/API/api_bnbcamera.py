@@ -41,7 +41,7 @@ def get_position():
     n_sum = int(np.sum(binarized))
 
     if n_sum < 50:
-        pos = None, None
+        pos = 0, 0
     else:
         pos = (x_sum // n_sum, y_sum // n_sum)
         x_pos, y_pos = pos
@@ -60,7 +60,7 @@ def get_position():
                     (x_sum // n_sum + 40, y_sum // n_sum + 40),
                     cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255))
         cv2.line(frame, (width // 2, 0), (width // 2, height), (255, 255, 255))
-        cv2.imshow('frame', frame)
+    cv2.imshow('frame', frame)
     return pos
 
 
@@ -117,7 +117,7 @@ class BallControl(Device):
 		self.camera_sensor = None
 
 	def camera_loop(self):
-		self.camera_sensor = CameraSensor(cam=4)
+		self.camera_sensor = CameraSensor(cam=0)
 		while True:
 			position = self.camera_sensor.get_data()
 			keypressed = cv2.waitKey(30)
