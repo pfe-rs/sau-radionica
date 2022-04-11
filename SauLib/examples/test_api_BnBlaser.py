@@ -4,15 +4,13 @@ from SauLib.API.api_BnBlaser import BnBlaser
 from math import sin
 import matplotlib.pyplot as plt
 
-PORT = "/dev/ttyACM0"
-
 t_sample = 0.5
 
 
 class Test(BnBlaser):
 
-    def __init__(self, port):
-        BnBlaser.__init__(self, port=port)
+    def __init__(self):
+        BnBlaser.__init__(self)
 
         # inicijalizovanje stanja
         self.dt = 0
@@ -43,7 +41,7 @@ class Test(BnBlaser):
         return control_out
 
 
-test = Test(port=PORT)
+test = Test()
 test.control_loop()
 
 plt.plot(test.measurements)

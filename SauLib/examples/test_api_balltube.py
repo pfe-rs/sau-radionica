@@ -5,13 +5,10 @@ import sys
 sys.path.append('../..')
 from SauLib.API.api_ballandtube import BallAndTube
 
-# Set port name
-PORT = '/dev/ttyACM0'
-
 class TestBnBCamera(BallAndTube):
 
-    def __init__(self, port):
-        BallAndTube.__init__(self, port=port)
+    def __init__(self):
+        BallAndTube.__init__(self)
 
         # inicijalizovanje stanja
         self.dt = 0
@@ -56,12 +53,9 @@ class TestBnBCamera(BallAndTube):
         return control_clamped
 
 
-tst = TestBnBCamera(port=PORT)
+tst = TestBnBCamera()
 tst.control_loop()
 
 plt.plot(tst.measurements)
 plt.plot(tst.controls)
 plt.show()
-
-
-h = Heater(PORT)

@@ -6,7 +6,7 @@ TEMP_SENSOR_TEMPERATURE_BYTES = 2
 class TempSensor(Device):
 
     def __init__(self, port, sleep: float = 0.04):
-        Device.__init__(self, port, channel=2, sleep=sleep)
+        Device.__init__(self, channel=2, port=port, sleep=sleep)
         self.bind_input_device(InputSource.ADC, 100)
 
     def get_data(self):
@@ -14,7 +14,7 @@ class TempSensor(Device):
 
 class DigitalTempSensor(Device):
     def __init__(self, port, sleep: float = 0.04):
-        Device.__init__(self, port, channel=2, sleep=sleep)
+        Device.__init__(self, port=port, channel=2, sleep=sleep)
         self.bind_input_device(InputSource.TEMP_SENSOR, 11)
 
     def get_data(self):
@@ -53,7 +53,7 @@ class DryerControl(Device):
 
 class Dryer(ApiBase):
 
-    def __init__(self, port: str, verbosity: bool = False, sleep: float = 0.04, digital: bool = False):
+    def __init__(self, port = None, verbosity: bool = False, sleep: float = 0.04, digital: bool = False):
         ApiBase.__init__(self)
         self.dryer = DryerControl(port=port, sleep=sleep, verbosity=verbosity, digital=digital)
 
@@ -62,3 +62,6 @@ class Dryer(ApiBase):
 
     def read_sensor_data(self):
         return self.dryer.get_data()
+
+    def exit(self):
+        print("ocu da ga ubijem")

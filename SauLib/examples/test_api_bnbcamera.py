@@ -5,15 +5,10 @@ import sys
 sys.path.append('../..')
 from SauLib.API.api_bnbcamera import BallAndBeamCamera
 
-
-# Set port name
-PORT = '/dev/ttyACM0'
-
-
 class TestBnBCamera(BallAndBeamCamera):
 
-	def __init__(self, port):
-		BallAndBeamCamera.__init__(self, port=port)
+	def __init__(self):
+		BallAndBeamCamera.__init__(self)
 
 		# inicijalizovanje stanja
 		self.dt = 0
@@ -56,7 +51,7 @@ class TestBnBCamera(BallAndBeamCamera):
 		return control_x_clamped
 
 
-tst = TestBnBCamera(port=PORT)
+tst = TestBnBCamera()
 tst.control_loop()
 
 plt.plot(tst.measurements)

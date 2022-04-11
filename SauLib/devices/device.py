@@ -1,6 +1,7 @@
 from enum import IntEnum
-from SauLib.golub.filipid.port import Port
 from typing import Union
+from .port import Port
+import serial
 
 class UMAKConstants:
     CMD_SENSOR = 255
@@ -23,7 +24,7 @@ class OutputSource(IntEnum):
 
 class Device:
 
-    def __init__(self, port: Union[str, Port], channel: int, baudrate: int = 19200, timeout: int = 1, verbosity: bool = False, sleep: float = 0.04):
+    def __init__(self, channel: int, port: Union[str, Port, None] = None, baudrate: int = 19200, timeout: int = 1, verbosity: bool = False, sleep: float = 0.04):
         """
         Initialize serial port
         :param port: port name
@@ -31,7 +32,17 @@ class Device:
         :param timeout:
         :param verbosity:
         """
-        if isinstance(port, Port):
+        if port is None:
+            all_ports = [i.device for i in list(serial.tools.list_ports.comports())]
+            if len(all_ports) == 0:
+                raise Exception('No open ports! Please make sure the microcontroller is connected.')
+            self.port = Port(
+                port=all_ports[0],
+                baudrate=baudrate,
+                timeout=timeout,
+                verbosity=verbosity
+            )
+        elif isinstance(port, Port):
             self.port = port
         else:
             self.port = Port(
@@ -77,7 +88,7 @@ class Device:
         if rsp[0] != UMAKConstants.ACKNOWLEDGE:
             raise Exception('Failed actuator write!')
 
-    def sensor(self) -> float:
+    def sensor(self) -> int:
         data_rsp = self.port.send(
             [UMAKConstants.CMD_SENSOR, self.channel],
             self.sleep

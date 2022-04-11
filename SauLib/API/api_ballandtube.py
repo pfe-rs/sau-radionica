@@ -117,7 +117,7 @@ class Tube(Device):
 
 
 class BallAndTube(ApiBase):
-	def __init__(self, port, verbosity= False):
+	def __init__(self, port=None, verbosity= False):
 		ApiBase.__init__(self)
 		self.tube = Tube(port=port, verbosity=verbosity)
 

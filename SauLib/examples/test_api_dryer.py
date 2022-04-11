@@ -1,31 +1,25 @@
 import sys
 from math import sin
 import matplotlib.pyplot as plt
-
 sys.path.append('../..')
-
-from hw.sau_api.api_dryer import Dryer
-
-# Set port name
-PORT = '/dev/ttyACM0'
-
+from SauLib.API.api_dryer import Dryer
 
 class TestDryer(Dryer):
 
-	def __init__(self, port):
-		Dryer.__init__(self, port=port)
+	def __init__(self):
+		Dryer.__init__(self)
 
-		# inicijalizovanje stanja
+		# Inicijalizacija stanja
 		self.dt = 0
 		self.measurements = []
 		self.controls = []
 
 	def control(self, measurement):
 
-		# dodajte vas kod ovde!
-		# control treba da vraca int u rasponu [0,4000]
+		# Dodajte vaš kod ovde!
+		# control treba da vraća int u rasponu [0,255]
 		self.dt += 1
-		control_out = int(2000*(1+sin(self.dt * 0.01)))
+		control_out = int(100*(1+sin(self.dt * 0.01)))
 		# end vas kod
 
 		# real time plot, Marjanovic TM
@@ -44,7 +38,7 @@ class TestDryer(Dryer):
 		return control_out
 
 
-tst = TestDryer(port=PORT)
+tst = TestDryer()
 tst.control_loop()
 
 plt.plot(tst.measurements)

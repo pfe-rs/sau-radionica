@@ -56,7 +56,7 @@ class BnBLaserControl(Device):
 
 
 class BnBlaser(ApiBase):
-    def __init__(self, port: str):
+    def __init__(self, port = None):
         ApiBase.__init__(self)
         # Dryer init
         self.BnB = BnBLaserControl(port=port)

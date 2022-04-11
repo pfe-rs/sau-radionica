@@ -152,7 +152,7 @@ class BallControl(Device):
 
 
 class BallAndPlate(ApiBase):
-	def __init__(self, port, verbosity= False):
+	def __init__(self, port=None, verbosity=False):
 		ApiBase.__init__(self)
 		self.ball = BallControl(port=port, verbosity=verbosity)
 

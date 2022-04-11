@@ -1,20 +1,11 @@
 import sys
-from math import sin
-import matplotlib.pyplot as plt
 from time import sleep
-
-sys.path.append('../..')
-
 from SauLib.API.api_dryer import Dryer
-
-# Set port name
-PORT = '/dev/ttyACM0'
-
 
 class TestDryer(Dryer):
 
-	def __init__(self, port):
-		Dryer.__init__(self, port=port, verbosity=True)
+	def __init__(self):
+		Dryer.__init__(self, verbosity=True)
 		while True:
 			print('Writing 255')
 			self.write_actuator(255)
@@ -32,5 +23,5 @@ class TestDryer(Dryer):
 		return 0
 
 
-tst = TestDryer(port=PORT)
+tst = TestDryer()
 tst.control_loop()

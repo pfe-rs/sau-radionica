@@ -1,19 +1,13 @@
 import sys
 from math import sin
 from time import sleep
-
 sys.path.append('../..')
-
 from SauLib.API.api_dryer import Dryer
-
-# Set port name
-PORT = 'COM4'
-
 
 class TestDryer(Dryer):
 
-	def __init__(self, port):
-		Dryer.__init__(self, port=port, verbosity=True, digital=True)
+	def __init__(self):
+		Dryer.__init__(self, verbosity=True, digital=True)
 		while True:
 			print('Writing 255')
 			self.write_actuator(255)
@@ -31,5 +25,5 @@ class TestDryer(Dryer):
 		return 0
 
 
-tst = TestDryer(port=PORT)
+tst = TestDryer()
 tst.control_loop()

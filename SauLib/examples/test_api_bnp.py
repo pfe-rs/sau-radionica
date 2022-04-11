@@ -6,13 +6,10 @@ from SauLib.API.api_ballandplate import BallAndPlate
 from math import sin, cos
 import matplotlib.pyplot as plt
 
-# Set port name
-PORT = '/dev/ttyACM0'
-
 class TestBnP(BallAndPlate):
 
-	def __init__(self, port):
-		BallAndPlate.__init__(self,port=port)
+	def __init__(self):
+		BallAndPlate.__init__(self)
 
 		# inicijalizovanje stanja
 		self.dt = 0
@@ -47,7 +44,7 @@ class TestBnP(BallAndPlate):
 		return control_x_clamped, control_y_clamped
 
 
-tst = TestBnP(port=PORT)
+tst = TestBnP()
 tst.control_loop()
 
 plt.plot(tst.measurements)
