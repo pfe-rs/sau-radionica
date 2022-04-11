@@ -1,10 +1,9 @@
+import matplotlib.pyplot as plt
+from math import sin
 import sys
 
 sys.path.append('../..')
 from SauLib.API.api_bnbcamera import BallAndBeamCamera
-
-from math import sin
-import matplotlib.pyplot as plt
 
 
 # Set port name
@@ -14,7 +13,7 @@ PORT = '/dev/ttyACM0'
 class TestBnBCamera(BallAndBeamCamera):
 
 	def __init__(self, port):
-		BallAndBeamCamera.__init__(self,port=port)
+		BallAndBeamCamera.__init__(self, port=port)
 
 		# inicijalizovanje stanja
 		self.dt = 0
@@ -23,14 +22,23 @@ class TestBnBCamera(BallAndBeamCamera):
 
 	def control(self, measurement):
 
-		# dodajte vas kod ovde!
-		# control treba da vraca int u rasponu [0,4000]
 		self.dt += 1
-		control_out = int(60//2*(1+sin(self.dt * 0.01)))
-		# end vas kod
+		MIN_SERVO = 70
+		MAX_SERVO = 110
+
+
+# POCETAK VASEG KODA
+		# funkcija treba da vrati signal kontrole, a dobija signal senzora kao ulaz
+
+		# sinusi koji talasaju [0,1] kao primer
+		control_x = (1+sin(self.dt * 0.01))/2
+
+# KRAJ VASEG KODA
+
+		control_x_clamped = int(MIN_SERVO + (MAX_SERVO-MIN_SERVO) * control_x)
 
 		print("Measurement {}".format(measurement))
-		print("Control {}".format(control_out))
+		print("Control {}".format(control_x_clamped))
 
 		# real time plot, Marjanovic TM
 		# print("{} {}".format(measurement, control_out))
@@ -43,9 +51,9 @@ class TestBnBCamera(BallAndBeamCamera):
 
 		# fill in the real plot
 		self.measurements.append(measurement)
-		self.controls.append(control_out)
+		self.controls.append(control_x_clamped)
 
-		return control_out
+		return control_x_clamped
 
 
 tst = TestBnBCamera(port=PORT)
